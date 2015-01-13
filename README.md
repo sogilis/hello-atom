@@ -3,13 +3,12 @@
 This is an example atom-shell app based off these instructions:
 - https://github.com/atom/atom-shell/blob/master/docs/tutorial/quick-start.md
 
-To run you should be able to do the following:
+# Installation
+To install all required components do the following:
 
-`./run.sh`
-
-OR on Windows:
-
-`run`
+```
+./install.sh`
+```
 
 OR manually:
 
@@ -26,14 +25,9 @@ npm install
 grunt download-atom-shell
 ```
 
-Then you should be able to run the app:
+# Run
+To run the app:
 
 ```
-./build/atom-shell/Atom.app/Contents/MacOS/Atom ./hello-app
-```
-
-OR on Windows:
-
-```
-./build/atom-shell/atom ./hello-app
+./run.sh
 ```
