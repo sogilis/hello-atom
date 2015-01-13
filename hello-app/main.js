@@ -1,6 +1,8 @@
 var app = require('app');  // Module to control application life.
 var BrowserWindow = require('browser-window');  // Module to create native browser window.
 var fs = require('fs');
+var YAML = require('yamljs');
+var ipc = require('ipc');
 
 // Report crashes to our server.
 require('crash-reporter').start();
@@ -14,6 +16,10 @@ app.on('window-all-closed', function() {
   if (process.platform != 'darwin')
     app.quit();
 });
+
+var sendToDo = function(sender, todo) {
+    sender.send('todo', todo);
+};
 
 // This method will be called when atom-shell has done everything
 // initialization and ready for creating browser windows.
@@ -35,16 +41,33 @@ app.on('ready', function() {
                 fs.readFile(todosFolderPath + todoFile, {encoding : 'utf8' }, function(err, data) {
                    if (err)
                        console.error(err);
-                    console.log(data); 
-                    var todo = {
-                            filename: todoFile,
-                            content: data
-                        };
+                    var splittedData = data.split("---");
                     
-                    mainWindow.webContents.send('todo', todo);
+                    if (splittedData.length === 3){
+
+                        var markdownContent = splittedData[2];
+                        var yamlContent = splittedData[1];
+                        
+                        var todo = {
+                            metadata: YAML.parse(yamlContent),
+                            content: markdownContent
+                        };
+
+                        sendToDo(mainWindow.webContents, todo);
+                    }
                 });
             });
-        }); 
+        });
+        
+        ipc.on('newtodo', function(event, arg) {
+            var todo = {
+                metadata: {
+                    title: "plop"
+                },
+                content: arg
+            };
+            sendToDo(event.sender, todo);
+        });
     });
     
 

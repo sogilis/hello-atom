@@ -2,25 +2,28 @@
 <html>
   <head>
     <title>Todo List!</title>
+    <script src="mustache.js"></script>
   </head>
   <body>
     <h1>Todo app!</h1>
       <ul id="todoList">
       </ul>
+      <input type="text" id="todoTitle" />
+      <button id="addToDo">add todo</button>
     <script>
-    require('ipc').on('todo', function(todo) {
-        console.log(todo);
+        var ipc = require('ipc');
+        var todo_template = '<li><span>{{metadata.title}}</span><pre>{{content}}</pre></li>';
+        Mustache.parse(todo_template);
         var htmlList = document.getElementById('todoList');
-        
-        var node = document.createElement("li");
-        var textnode = document.createTextNode(todo.filename);
-        var prenode = document.createElement("pre");
-        var preTextnode = document.createTextNode(todo.content);
-        prenode.appendChild(preTextnode);        
-        node.appendChild(textnode);               
-        node.appendChild(prenode);               
-        htmlList.appendChild(node);
-    });  
+        ipc.on('todo', function(todo) {
+            var rendered = Mustache.render(todo_template, todo);
+            var div = document.createElement('div');
+            div.innerHTML = rendered;
+            htmlList.appendChild(div.firstChild);
+        });
+        document.getElementById('addToDo').addEventListener('click', function() {
+            ipc.send('newtodo', document.getElementById('todoTitle').value);
+        });
     </script>
   </body>
 </html>
