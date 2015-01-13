@@ -1,11 +1,23 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Hello World!</title>
+    <title>Todo List!</title>
   </head>
   <body>
-    <h1>Hello World!</h1>
-    We are using node.js <script>document.write(process.version)</script>
-    and atom-shell <script>document.write(process.versions['atom-shell'])</script>.
+    <h1>Todo app!</h1>
+      <ul id="todoList">
+      </ul>
+    <script>
+    require('ipc').on('todos', function(list) {
+        console.log(list);
+      var htmlList = document.getElementById('todoList');
+      for (todo in list) {
+        var node = document.createElement("li");                 // Create a <li> node
+        var textnode = document.createTextNode(todo);         // Create a text node
+        node.appendChild(textnode);               
+        htmlList.appendChild(node);
+      }
+    });  
+    </script>
   </body>
 </html>
