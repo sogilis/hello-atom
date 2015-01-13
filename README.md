@@ -31,3 +31,21 @@ To run the app:
 ```
 ./run.sh
 ```
+
+# How to debug browser
+
+Run node-inspector:
+```
+npm install node-inspector
+node-inspector
+```
+
+Enable debug mode when executing your app:
+```
+
+```
+
+Show debug logs with Chrome:
+```
+http://127.0.0.1:8080/debug?port=5858
+```
