@@ -25,11 +25,25 @@ app.on('ready', function() {
     // and load the index.html of the app.
     mainWindow.loadUrl('file://' + __dirname + '/index.html');
     
+    var todosFolderPath = __dirname + '/todos/';
+    
     mainWindow.webContents.on('did-finish-load', function() {
-        fs.readdir(__dirname + '/todos', function(err, list) {
+        fs.readdir(todosFolderPath, function(err, list) {
             if (err)
-                console.log(err);
-            mainWindow.webContents.send('todos', list);
+                console.error(err);
+            list.forEach(function(todoFile){
+                fs.readFile(todosFolderPath + todoFile, {encoding : 'utf8' }, function(err, data) {
+                   if (err)
+                       console.error(err);
+                    console.log(data); 
+                    var todo = {
+                            filename: todoFile,
+                            content: data
+                        };
+                    
+                    mainWindow.webContents.send('todo', todo);
+                });
+            });
         }); 
     });
     

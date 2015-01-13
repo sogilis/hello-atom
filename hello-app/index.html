@@ -8,15 +8,18 @@
       <ul id="todoList">
       </ul>
     <script>
-    require('ipc').on('todos', function(list) {
-        console.log(list);
-      var htmlList = document.getElementById('todoList');
-      for (todo in list) {
-        var node = document.createElement("li");                 // Create a <li> node
-        var textnode = document.createTextNode(todo);         // Create a text node
+    require('ipc').on('todo', function(todo) {
+        console.log(todo);
+        var htmlList = document.getElementById('todoList');
+        
+        var node = document.createElement("li");
+        var textnode = document.createTextNode(todo.filename);
+        var prenode = document.createElement("pre");
+        var preTextnode = document.createTextNode(todo.content);
+        prenode.appendChild(preTextnode);        
         node.appendChild(textnode);               
+        node.appendChild(prenode);               
         htmlList.appendChild(node);
-      }
     });  
     </script>
   </body>
